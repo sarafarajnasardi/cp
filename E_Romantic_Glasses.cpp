@@ -145,6 +145,7 @@ void solve() {
         check.insert(sub);
     }
     cout<<"NO"<<endl;
+   # hell0
 
 }
 
