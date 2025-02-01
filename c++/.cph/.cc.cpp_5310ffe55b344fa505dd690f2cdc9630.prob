@@ -1,0 +1,1 @@
+{"name":"Local: cc","url":"c:\\Users\\ASUS\\Desktop\\coding\\c++\\cc.cpp","tests":[{"id":1738077825458,"input":"3\n1 2\n2 3\n4 5\n","output":"YES\n"},{"id":1738077851401,"input":"4\n1 2\n2 3\n2 3\n1 2\n","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\ASUS\\Desktop\\coding\\c++\\cc.cpp","group":"local","local":true}

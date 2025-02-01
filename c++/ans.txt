@@ -1,0 +1,11 @@
+BUBBLE SORT:
+Time taken for Best Case: 7531458 microseconds
+Time taken for Average Case: 25662997 microseconds
+Time taken for Worst Case: 25891055 microseconds
+
+QUICK SORT:
+Time taken for Best Case: 7510310 microseconds
+Time taken for Average Case: 25669987 microseconds
+Time taken for Worst Case: 25948481 microseconds
+
+
