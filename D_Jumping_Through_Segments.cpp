@@ -112,46 +112,48 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 void solve() {
     ll n;
-    cin >> n;
+    cin>>n;
+    vector<pair<ll,ll>> a(n);
+    forn(i,n) cin>>a[i].fi>>a[i].se;
 
-    vector<vector<ll>> v(n, vector<ll>(n));
-    forn(i, n) {
-        forn(j, n) {
-            cin >> v[i][j];
+    ll strt=0;
+    ll end=1e9+1;
+    ll ans=-1;
+    while(strt<=end){
+        ll mid=end+(strt-end)/2;
+        bool check=true;
+        ll sumlow=min(mid,a[0].first);
+        ll sumhigh=min(mid,a[0].second);
+        if(sumhigh<a[0].fi){
+            check=false;
+        }else{
+            for(int i=0;i<n-1;i++){
+                //cout<<sumlow<<" "<<sumhigh<<endl;
+                if((sumlow-mid)>a[i+1].se||(sumhigh+mid)<a[i+1].fi){
+                    check=false;
+                    break;
+                }
+                if(a[i].fi>a[i+1].se){
+                    sumlow=max(sumlow-mid,a[i+1].fi);
+                    sumhigh=max(sumlow-mid,a[i+1].se);
+                }else if(a[i].se<a[i+1].fi){
+                    sumlow=min(sumhigh+mid,a[i+1].fi);
+                    sumhigh=min(sumhigh+mid,a[i+1].se);
+                }else{
+                    sumlow=max(sumlow-mid,a[i+1].fi);
+                    sumhigh=min(sumhigh+mid,a[i+1].se);
+                }
+            }
+        }
+        if(check){
+            ans=mid;
+            end=mid-1;
+        }else{
+            strt=mid+1;
         }
     }
-
-    vector<ll> rows(n,0);
-
-    // Compute prefix sums for rows
-    forn(i, n) {
-        ll j = n - 1;
-        ll cnt=0;
-        while (j >= 0&&v[i][j]==1) {
-            cnt++;
-            j--; 
-        }
-        rows[i] = cnt;
-    }
-
-    sort(rows.begin(), rows.end());
-    ll ans=0;
-    for(int i=0;i<n;i++){
-        //cout<<rows[i]<<" "<<ans<<endl;
-        if(rows[i]<ans){
-            cout<<ans<<endl;
-            return;
-        }
-        if(i<n-1&&rows[i+1]>ans){
-            ans++;
-        }
-        if(i==n-1){
-            ans++;
-        }
-    }
-    cout <<min(ans,n)<< endl;
+    cout<<ans<<ln;
     return;
- 
 }
 
 int main() {

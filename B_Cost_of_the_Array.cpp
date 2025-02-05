@@ -111,54 +111,46 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 
 void solve() {
-    ll n;
-    cin >> n;
+   ll n, k;
+    cin >> n >> k;
+    vll a(n);
+    forn(i, n) cin >> a[i];
 
-    vector<vector<ll>> v(n, vector<ll>(n));
-    forn(i, n) {
-        forn(j, n) {
-            cin >> v[i][j];
-        }
-    }
-
-    vector<ll> rows(n,0);
-
-    // Compute prefix sums for rows
-    forn(i, n) {
-        ll j = n - 1;
-        ll cnt=0;
-        while (j >= 0&&v[i][j]==1) {
-            cnt++;
-            j--; 
-        }
-        rows[i] = cnt;
-    }
-
-    sort(rows.begin(), rows.end());
-    ll ans=0;
-    for(int i=0;i<n;i++){
-        //cout<<rows[i]<<" "<<ans<<endl;
-        if(rows[i]<ans){
-            cout<<ans<<endl;
+    ll m = n - k + 1;
+    ll mini=LLONG_MAX;
+    for(ll p=1;p<=m;p++){
+        if(a[p]!=1){
+            cout<<1<<endl;
             return;
         }
-        if(i<n-1&&rows[i+1]>ans){
-            ans++;
-        }
-        if(i==n-1){
-            ans++;
-        }
     }
-    cout <<min(ans,n)<< endl;
-    return;
- 
+    ll j = 1;
+    for (ll i = 1; i < n; i += 2) {
+        ll h = i;
+        ll l = j;
+
+        while (h < n && h < i + m && a[h] == l) {
+            h++;
+            l++;
+        }
+        if (h < i + m && h < n && a[h] != l) {
+            mini=min(mini,l);
+        }
+        j++;
+    }
+    
+    if(mini!=LLONG_MAX){
+        cout << mini << ln;
+    }else{
+        cout<<(k/2)+1<<ln;
+    }
 }
 
 int main() {
     fast_cin();
     ll t;
     cin >> t;
-    for(int it=1;it<=t;it++) {
+    for(ll it=1;it<=t;it++) {
         solve();
     }
     return 0;
