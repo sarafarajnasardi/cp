@@ -109,49 +109,45 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
 
-
+long long rec(vector<long long> a,long long i,long long prev1,long long prev2){
+    if(i>=a.size())return 0;
+    ll take1=0;
+    ll take2=0;
+    if(prev1!=-1&&a[i]>prev1){
+        take1 = 1;
+    }
+    if(prev2!=-1&&a[i]>prev2){
+        take2 = 1;
+    }
+    take1+=rec(a,i+1,a[i],prev2);
+    take2+=rec(a,i+1,prev1,a[i]);
+    return min(take1,take2);
+}
 void solve() {
     ll n;
-    cin >> n;
-
-    vector<vector<ll>> v(n, vector<ll>(n));
-    forn(i, n) {
-        forn(j, n) {
-            cin >> v[i][j];
-        }
-    }
-
-    vector<ll> rows(n,0);
-
-    // Compute prefix sums for rows
-    forn(i, n) {
-        ll j = n - 1;
-        ll cnt=0;
-        while (j >= 0&&v[i][j]==1) {
-            cnt++;
-            j--; 
-        }
-        rows[i] = cnt;
-    }
-
-    sort(rows.begin(), rows.end());
-    ll ans=0;
+    cin>>n;
+    vector<ll> a(n);
+    for(auto &i : a) cin >> i;
+    ll mini=a[0];
+    set<ll>s;
     for(int i=0;i<n;i++){
-        //cout<<rows[i]<<" "<<ans<<endl;
-        if(rows[i]<ans){
-            cout<<ans<<endl;
-            return;
-        }
-        if(i<n-1&&rows[i+1]>ans){
-            ans++;
-        }
-        if(i==n-1){
-            ans++;
+        if(a[i]<=mini){
+            mini=a[i];
+            s.insert(i);
         }
     }
-    cout <<min(ans,n)<< endl;
-    return;
- 
+    mini=LLONG_MAX;
+    ll count=0;
+    for(int i=0;i<n;i++){
+        if(s.count(i)==0&&a[i]<=mini){
+            mini=a[i];
+            s.insert(i);
+        }else if(s.count(i)==0){
+            mini=a[i];
+            count++;
+        }
+    }
+    cout<<count<<endl;
 }
 
 int main() {
