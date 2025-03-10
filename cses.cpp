@@ -41,7 +41,7 @@ typedef vector<pii> vpii;
 typedef map<int, int> mii;
 typedef map<ll,ll> mll;
 
-const ll MOD = 998244353;
+const ll MOD = 1e9+7;
 const double eps = 1e-12;
 
 #define forn(i,e) for(ll i = 0; i < e; i++)
@@ -109,38 +109,61 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
 
-
+vector<int> digits(int n){
+    vector<int> res;
+    while(n!=0){
+        res.push_back(n%10);
+        n=n/10;
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
 void solve() {
+    
     ll n;
-    cin>>n;
-    vector<ll>ans(n);
-    for(int i=1;i<=n;i++){
-        ans[i-1]=i;
-    }
-    ll sum=0;
-    for(int i=0;i<n;i++){
-        sum+=ans[i];
-        if(i==n-1&&isPerfectSquare(sum)){
-            cout<<-1<<endl;
-            return;
-        }
-        if(isPerfectSquare(sum)){
-            swap(ans[i],ans[i+1]);
-            sum++;
+    cin >> n;
+    ll m=n;
+    vector<vector<char>>grid(n,vector<char>(m));
+    for(int i=0;i<n;i++) {
+        string s;
+        cin >> s;
+        for(int j=0;j<m;j++) {
+            grid[i][j]=s[j];
         }
     }
-    for(int i=0;i<n;i++){
-        cout<<ans[i]<<" ";
+    vector<vector<ll>>dp(n,vector<ll>(m,0));
+    if(grid[0][0]=='*'){
+        cout<<dp[0][0]<<endl;
+        return;
     }
-    cout<<endl;
+    dp[0][0]=1;
+    for(int i=0;i<n;i++) {
+       for(int j=0;j<m;j++){
+           if(i==0&&j==0) continue;
+           if(i==0&& grid[i][j]=='.'){
+                dp[i][j]=dp[i][j-1];
+                continue;
+           }
+           if(j==0&&grid[i][j]=='.'){
+                dp[i][j]=dp[i-1][j];
+                continue;
+           }
+           if(grid[i][j]=='.') {
+                dp[i][j]=(dp[i][j-1]+dp[i-1][j])%MOD;
+            }
+       }
+    }
+    cout << dp[n-1][m-1] << "\n";
+
 }
 
 int main() {
     fast_cin();
-    ll t;
-    cin >> t;
-    for(int it=1;it<=t;it++) {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // for(int it=1;it<=t;it++) {
+    //     solve();
+    // }
+    solve();
     return 0;
 }
