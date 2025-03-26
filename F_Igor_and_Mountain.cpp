@@ -1,7 +1,6 @@
 
 // Author : Sarafaraj Nasardi
 
-
 #pragma GCC optimize("Ofast")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
 #pragma GCC optimize("unroll-loops")
@@ -28,9 +27,9 @@ using namespace std;
 
 typedef long long ll;
 typedef long double ld;
-typedef pair<int,int> pii;
-typedef pair<ll,ll> pll;
-typedef pair<double,double> pdd;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef pair<double, double> pdd;
 typedef vector<ll> vll;
 typedef vector<int> vi;
 typedef vector<vector<int>> vvi;
@@ -39,65 +38,104 @@ typedef vector<vector<pll>> vvpll;
 typedef vector<pll> vpll;
 typedef vector<pii> vpii;
 typedef map<int, int> mii;
-typedef map<ll,ll> mll;
+typedef map<ll, ll> mll;
 
 const ll MOD = 998244353;
 const double eps = 1e-12;
 
-#define forn(i,e) for(ll i = 0; i < e; i++)
-#define forsn(i,s,e) for(ll i = s; i < e; i++)
-#define rforn(i,s) for(ll i = s; i >= 0; i--)
-#define rforsn(i,s,e) for(ll i = s; i >= e; i--)
+#define forn(i, e) for (ll i = 0; i < e; i++)
+#define forsn(i, s, e) for (ll i = s; i < e; i++)
+#define rforn(i, s) for (ll i = s; i >= 0; i--)
+#define rforsn(i, s, e) for (ll i = s; i >= e; i--)
 #define ln "\n"
-#define dbg(x) cout<<#x<<" = "<<x<<ln
+#define dbg(x) cout << #x << " = " << x << ln
 #define mp make_pair
 #define pb push_back
 #define fi first
 #define se second
 #define INF 2e18
-#define fast_cin() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
+#define fast_cin()                    \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(NULL);                    \
+    cout.tie(NULL)
 #define all(x) (x).begin(), (x).end()
 #define sz(x) ((ll)(x).size())
-#define yes cout << "YES\n" ;
-#define no cout << "NO\n" ;
-#define iv(v,n) vector<ll> v(n); forn(i,n) cin >> v[i] ;
-
+#define yes cout << "YES\n";
+#define no cout << "NO\n";
+#define iv(v, n)     \
+    vector<ll> v(n); \
+    forn(i, n) cin >> v[i];
 
 // unique sort :
 // sort(all(v));
 // v.resize(unique(all(v)) - v.begin()) ;
 
 // Mathematical functions
-ll gcd(ll a, ll b){if (b == 0)return a;return gcd(b, a % b);} //__gcd 
+ll gcd(ll a, ll b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+} //__gcd
 
+ll lcm(ll a, ll b) { return (a / gcd(a, b) * b); }
 
-ll lcm(ll a, ll b){return (a/gcd(a,b)*b);}
-
-ll moduloMultiplication(ll a,ll b,ll mod){ll res = 0;a %= mod;while (b){if (b & 1)res = (res + a) % mod;b >>= 1;}return res;}
-
-ll powermod( ll x, ll y, ll mod){ ll ans = 1;if( y == 0) return 1;while(y){   if(y%2) ans = (1ll*ans*x)%mod;    x = (1ll*x*x)%mod;    y /= 2;}return ans;}
-
-ll binexp(ll a , ll b , ll m){
-   ll result = 1;
-   while(b > 0){
-      if(b & 1){
-        result = ((result % m) * (a % m)) % m;
-  }
-     a = ((a % m) * (a % m)) % m;
-b >>= 1;
+ll moduloMultiplication(ll a, ll b, ll mod)
+{
+    ll res = 0;
+    a %= mod;
+    while (b)
+    {
+        if (b & 1)
+            res = (res + a) % mod;
+        b >>= 1;
+    }
+    return res;
 }
-return result;
+
+ll powermod(ll x, ll y, ll mod)
+{
+    ll ans = 1;
+    if (y == 0)
+        return 1;
+    while (y)
+    {
+        if (y % 2)
+            ans = (1ll * ans * x) % mod;
+        x = (1ll * x * x) % mod;
+        y /= 2;
+    }
+    return ans;
 }
 
-vector<vector<long long>> matrixmultiply(const vector<vector<long long>>& matrix1, const vector<vector<long long>>& matrix2) {
+ll binexp(ll a, ll b, ll m)
+{
+    ll result = 1;
+    while (b > 0)
+    {
+        if (b & 1)
+        {
+            result = ((result % m) * (a % m)) % m;
+        }
+        a = ((a % m) * (a % m)) % m;
+        b >>= 1;
+    }
+    return result;
+}
+
+vector<vector<long long>> matrixmultiply(const vector<vector<long long>> &matrix1, const vector<vector<long long>> &matrix2)
+{
     int rows = matrix1.size();
     int cols = matrix2[0].size();
     int common = matrix2.size();
     vector<vector<long long>> result(rows, vector<long long>(cols, 0));
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            for (int k = 0; k < common; k++) {
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            for (int k = 0; k < common; k++)
+            {
                 result[i][j] += matrix1[i][k] * matrix2[k][j];
             }
         }
@@ -105,84 +143,183 @@ vector<vector<long long>> matrixmultiply(const vector<vector<long long>>& matrix
     return result;
 }
 
-
-
-//Factorial by vector
-//vll fact;
-//void factorials(ll mod, ll maxi){fact.resize(maxi + 1, 1); for(int i = 2; i<= maxi ; i++) fact[i] = (fact[i-1]*i)%mod ;}
-//ll nCr(ll n, ll r, ll mod){ if(r > n) return 0; ll x = (fact[r]*fact[n-r])%mod ;ll ans = (fact[n] * (powermod(x,mod-2, mod)))%mod;return ans;}
-bool isPrime(ll n){if(n<=1)return false;if(n<=3)return true;if(n%2==0||n%3==0)return false;for(int i=5;i*i<=n;i=i+6)if(n%i==0||n%(i+2)==0)return false;return true;}
-
-bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log2(n)));}
-
-bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
-typedef vector<vector<char>> vvch;
-unordered_map<string,long long>dp;
-int rec(vvch &grid, ll i, ll j, ll d) {
-    if (i == 0) {
-        ll sum = 1;
-        for (ll k = j+1; k < grid[0].size(); k++) {
-            if (grid[i][k] == 'X' && k - j <= d) sum++;
-        }
-        for (ll k = j-1; k >= 0; k--) {
-            if (grid[i][k] == 'X' && j - k <= d) sum++;
-        }
-        
-        return sum%MOD;
-    }
-
-    if (i < 0 || j < 0 || i >= grid.size() || j >= grid[0].size()) return 0;
-    string key=to_string(i)+"#"+to_string(j)+"@"+grid[i][j];
-    if (dp.find(key)!= dp.end()) return dp[key];
-    ll max3=0;
-    ll max4=0;
-    char l=grid[i][j];
-    grid[i][j]='O';
-    ll ans=0;
-    for (ll k = j+1; k < grid[0].size(); k++) {
-        if (grid[i][k] == 'X' && k - j <= d){
-           ans= (ans+rec(grid, i, k, d))%MOD;
-        }
-    }
-    for (ll k = j-1; k >= 0; k--) {
-        if (grid[i][k] == 'X' && j - k <= d){
-            ans= (ans+rec(grid, i, k, d))%MOD;
-        }
-    }
-    for (ll k = 0; k < grid[0].size(); k++) {
-        if (i - 1 < 0) break;
-        ll x = 1 + (k - j) * (k - j);
-        if (x <= d * d && grid[i - 1][k] == 'X') {
-            ans=(ans+rec(grid, i - 1, k, d))%MOD;
-        }
-    }
-    grid[i][j]=l;
-    return dp[key]=ans;
+// Factorial by vector
+// vll fact;
+// void factorials(ll mod, ll maxi){fact.resize(maxi + 1, 1); for(int i = 2; i<= maxi ; i++) fact[i] = (fact[i-1]*i)%mod ;}
+// ll nCr(ll n, ll r, ll mod){ if(r > n) return 0; ll x = (fact[r]*fact[n-r])%mod ;ll ans = (fact[n] * (powermod(x,mod-2, mod)))%mod;return ans;}
+bool isPrime(ll n)
+{
+    if (n <= 1)
+        return false;
+    if (n <= 3)
+        return true;
+    if (n % 2 == 0 || n % 3 == 0)
+        return false;
+    for (int i = 5; i * i <= n; i = i + 6)
+        if (n % i == 0 || n % (i + 2) == 0)
+            return false;
+    return true;
 }
-void solve() {
+
+bool isPowerOfTwo(int n)
+{
+    if (n == 0)
+        return false;
+    return (ceil(log2(n)) == floor(log2(n)));
+}
+
+bool isPerfectSquare(ll x)
+{
+    if (x >= 0)
+    {
+        ll sr = sqrt(x);
+        return (sr * sr == x);
+    }
+    return false;
+}
+typedef vector<vector<char>> vvch;
+unordered_map<string, ll> dp;
+
+string hashGrid(const vvch &grid)
+{
+    string h = "";
+    for (auto &row : grid)
+        h += string(row.begin(), row.end()) + "|";
+    return h;
+}
+
+long long rec(vvch &grid, ll i, ll j, ll d)
+{
+    if (i < 0 || j < 0 || i >= grid.size() || j >= grid[0].size())
+        return 0;
+    if (grid[i][j] != 'X')
+        return 0;
+
+    string key = to_string(i) + "_" + to_string(j) + "_" + hashGrid(grid) + "_" + to_string(d);
+    if (dp.count(key))
+        return dp[key];
+
+    if (i == 0)
+    {
+        ll sum = 1;
+        for (ll k = j + 1; k < grid[0].size(); k++)
+            if (grid[i][k] == 'X' && k - j <= d)
+                sum++;
+        for (ll k = j - 1; k >= 0; k--)
+            if (grid[i][k] == 'X' && j - k <= d)
+                sum++;
+
+        return dp[key] = sum % MOD;
+    }
+
+    char l = grid[i][j];
+    grid[i][j] = 'O';
+    ll max3 = 0, max4 = 0, ans = 0;
+
+    for (ll k = j + 1; k < grid[0].size(); k++)
+        if (grid[i][k] == 'X' && k - j <= d)
+            max3 = max(max3, rec(grid, i, k, d));
+
+    for (ll k = j - 1; k >= 0; k--)
+        if (grid[i][k] == 'X' && j - k <= d)
+            max4 = max(max4, rec(grid, i, k, d));
+
+    for (ll k = 0; k < grid[0].size(); k++)
+    {
+        if (i - 1 < 0)
+            break;
+        ll x = 1 + (k - j) * (k - j);
+        if (x <= d * d && grid[i - 1][k] == 'X')
+            ans = (ans + rec(grid, i - 1, k, d)) % MOD;
+    }
+
+    grid[i][j] = l;
+    return dp[key] = (ans + max(max3, max4)) % MOD;
+}
+
+void solve()
+{
     ll n, m, d;
     cin >> n >> m >> d;
-    
-    vvch grid(n, vector<char>(m));
+
+    vector<vector<char>> grid(n, vector<char>(m));
+    vector<vector<ll>> dp(n, vector<ll>(m, 0));
+
     for (ll i = 0; i < n; i++)
         for (ll j = 0; j < m; j++)
             cin >> grid[i][j];
 
-    ll ans = 0;
-    
-    for (ll i = 0; i < m; i++) {
-        if (grid[n - 1][i] == 'X') {
-            ans = (ans+rec(grid, n - 1, i, d))%MOD;
+    // Base case: first row
+    for (ll j = 0; j < m; j++)
+        if (grid[0][j] == 'X')
+            dp[0][j] = 1;
+
+    // Compute DP table
+    for (ll i = 1; i < n; i++)
+    {
+        for (ll j = 0; j < m; j++)
+        {
+            if (grid[i][j] == 'X')
+            {
+                ll max_top = 0;
+                for (ll k = 0; k < m; k++)
+                {
+                    if (grid[i - 1][k] == 'X' && (1 + (j - k) * (j - k)) <= d * d)
+                    {
+                        max_top = (max_top + dp[i - 1][k]) % MOD;
+                    }
+                }
+                dp[i][j] = max_top;
+            }
         }
     }
-    cout << ans << ln;
+
+    // Propagate max values row-wise
+    for (ll i = 0; i < n; i++)
+    {
+        ll maxi1 = -1, maxi2 = -1, maxi = 0;
+        for (ll j = 0; j < m; j++)
+        {
+            if (dp[i][j] >= maxi)
+            {
+                maxi2 = maxi1;
+                maxi1 = j;
+                maxi = dp[i][j];
+            }
+        }
+        for (ll j = 0; j < m; j++)
+        {
+            if (j != maxi1)
+            {
+                dp[i][j] = (dp[i][j] + dp[i][maxi1]) % MOD;
+            }
+            else
+            {
+                dp[i][j] = (dp[i][j] + dp[i][maxi2]) % MOD;
+            }
+        }
+    }
+    cout<<"HELLO B"
+    forn(i,n){
+        for(int j=0;j<m;j++){
+            cout<<dp[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+    ll ans = 0;
+    for (ll j = 0; j < m; j++)
+        ans = (ans + dp[n - 1][j]) % MOD;
+
+    cout << ans << "\n";
 }
 
-int main() {
+int main()
+{
     fast_cin();
     ll t;
     cin >> t;
-    for(int it=1;it<=t;it++) {
+    for (int it = 1; it <= t; it++)
+    {
         solve();
     }
     return 0;
