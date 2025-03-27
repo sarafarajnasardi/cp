@@ -227,7 +227,6 @@ long long rec(vvch &grid, ll i, ll j, ll d, bool check)
 
     return memo[i][j][check] = (ans + ans1) % MOD;
 }
-
 void solve()
 {
     ll n, m, d;
@@ -247,21 +246,19 @@ void solve()
     vector<vector<ll>> dp(n, vector<ll>(m, 0));
     vector<ll> pref(m, 0);
 
-    // Prefix sum for first row
     pref[0] = grid[0][0];
     for (ll i = 1; i < m; i++)
     {
-        pref[i] = pref[i - 1] + grid[0][i];
+        pref[i] = (pref[i - 1] + grid[0][i]) % MOD;
     }
 
-    // DP initialization for first row
     for (ll i = 0; i < m; i++)
     {
         if (grid[0][i] == 1)
         {
             ll sum1 = pref[i] - (i - d - 1 >= 0 ? pref[i - d - 1] : 0);
             ll sum2 = (i + d < m) ? (pref[i + d] - pref[i]) : (pref[m - 1] - pref[i]);
-            dp[0][i] = (sum1 + sum2) % MOD;
+            dp[0][i] = ((sum1 + sum2) % MOD + MOD) % MOD;
         }
     }
     
@@ -270,10 +267,12 @@ void solve()
         vector<ll> pref1(m, 0);
         vector<ll> pref2(m, 0);
         pref2[0] = dp[i - 1][0];
+
         for (ll j = 1; j < m; j++)
         {
             pref2[j] = (pref2[j - 1] + dp[i - 1][j]) % MOD;
         }
+
         for (ll j = 0; j < m; j++)
         {
             ll ans = 0;
@@ -282,7 +281,7 @@ void solve()
                 ll left = max(0LL, j - (ll)floor(sqrt(d * d - 1)));
                 ll right = min(m - 1, j + (ll)floor(sqrt(d * d - 1)));
 
-                ans = (pref2[right] - (left > 0 ? pref2[left - 1] : 0) + MOD) % MOD;
+                ans = ((pref2[right] - (left > 0 ? pref2[left - 1] : 0)) % MOD + MOD) % MOD;
             }
             pref1[j] = (j == 0) ? ans : (pref1[j - 1] + ans) % MOD;
         }
@@ -293,7 +292,7 @@ void solve()
             {
                 ll sum1 = pref1[j] - (j - d - 1 >= 0 ? pref1[j - d - 1] : 0);
                 ll sum2 = (j + d < m) ? (pref1[j + d] - pref1[j]) : (pref1[m - 1] - pref1[j]);
-                dp[i][j] = (sum1 + sum2) % MOD;
+                dp[i][j] = ((sum1 + sum2) % MOD + MOD) % MOD; 
             }
         }
     }
@@ -305,6 +304,7 @@ void solve()
     }
     cout << result << "\n";
 }
+
 int main()
 {
     fast_cin();
