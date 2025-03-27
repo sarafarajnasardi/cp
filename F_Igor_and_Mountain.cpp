@@ -178,63 +178,54 @@ bool isPerfectSquare(ll x)
     return false;
 }
 typedef vector<vector<char>> vvch;
-unordered_map<string, ll> dp;
 
-string hashGrid(const vvch &grid)
-{
-    string h = "";
-    for (auto &row : grid)
-        h += string(row.begin(), row.end()) + "|";
-    return h;
-}
+unordered_map<ll, unordered_map<ll, unordered_map<bool, ll>>> memo;
 
-long long rec(vvch &grid, ll i, ll j, ll d)
+long long rec(vvch &grid, ll i, ll j, ll d, bool check)
 {
     if (i < 0 || j < 0 || i >= grid.size() || j >= grid[0].size())
-        return 0;
+        return memo[i][j][check] = 0;
     if (grid[i][j] != 'X')
-        return 0;
-
-    string key = to_string(i) + "_" + to_string(j) + "_" + hashGrid(grid) + "_" + to_string(d);
-    if (dp.count(key))
-        return dp[key];
+        return memo[i][j][check] = 0;
+    if (memo[i][j].count(check))
+        return memo[i][j][check];
 
     if (i == 0)
     {
         ll sum = 1;
-        for (ll k = j + 1; k < grid[0].size(); k++)
-            if (grid[i][k] == 'X' && k - j <= d)
+        for (ll k = j + 1; k < grid[0].size() && k - j <= d; k++)
+            if (grid[i][k] == 'X')
                 sum++;
-        for (ll k = j - 1; k >= 0; k--)
-            if (grid[i][k] == 'X' && j - k <= d)
+        for (ll k = j - 1; k >= 0 && j - k <= d; k--)
+            if (grid[i][k] == 'X')
                 sum++;
 
-        return dp[key] = sum % MOD;
+        return memo[i][j][check] = sum % MOD;
     }
 
-    char l = grid[i][j];
-    grid[i][j] = 'O';
-    ll max3 = 0, max4 = 0, ans = 0;
-
-    for (ll k = j + 1; k < grid[0].size(); k++)
-        if (grid[i][k] == 'X' && k - j <= d)
-            max3 = max(max3, rec(grid, i, k, d));
-
-    for (ll k = j - 1; k >= 0; k--)
-        if (grid[i][k] == 'X' && j - k <= d)
-            max4 = max(max4, rec(grid, i, k, d));
+    vector<ll> maxi;
+    ll ans = 0;
+    ll ans1 = 0;
+    if (!check)
+    {
+        for (ll k = 0; k < grid[0].size(); k++)
+        {
+            if (k != j && grid[i][k] == 'X' && abs(k - j) <= d)
+            {
+                ll add = rec(grid, i, k, d, true);
+                ans1 = (ans1 + add) % MOD;
+            }
+        }
+    }
 
     for (ll k = 0; k < grid[0].size(); k++)
     {
-        if (i - 1 < 0)
-            break;
         ll x = 1 + (k - j) * (k - j);
         if (x <= d * d && grid[i - 1][k] == 'X')
-            ans = (ans + rec(grid, i - 1, k, d)) % MOD;
+            ans = (ans + rec(grid, i - 1, k, d, false)) % MOD;
     }
 
-    grid[i][j] = l;
-    return dp[key] = (ans + max(max3, max4)) % MOD;
+    return memo[i][j][check] = (ans + ans1) % MOD;
 }
 
 void solve()
@@ -242,77 +233,78 @@ void solve()
     ll n, m, d;
     cin >> n >> m >> d;
 
-    vector<vector<char>> grid(n, vector<char>(m));
-    vector<vector<ll>> dp(n, vector<ll>(m, 0));
-
+    vvll grid(n, vector<ll>(m));
     for (ll i = 0; i < n; i++)
+    {
         for (ll j = 0; j < m; j++)
-            cin >> grid[i][j];
+        {
+            char c;
+            cin >> c;
+            grid[i][j] = (c == 'X') ? 1 : 0;
+        }
+    }
 
-    // Base case: first row
-    for (ll j = 0; j < m; j++)
-        if (grid[0][j] == 'X')
-            dp[0][j] = 1;
+    vector<vector<ll>> dp(n, vector<ll>(m, 0));
+    vector<ll> pref(m, 0);
 
-    // Compute DP table
+    // Prefix sum for first row
+    pref[0] = grid[0][0];
+    for (ll i = 1; i < m; i++)
+    {
+        pref[i] = pref[i - 1] + grid[0][i];
+    }
+
+    // DP initialization for first row
+    for (ll i = 0; i < m; i++)
+    {
+        if (grid[0][i] == 1)
+        {
+            ll sum1 = pref[i] - (i - d - 1 >= 0 ? pref[i - d - 1] : 0);
+            ll sum2 = (i + d < m) ? (pref[i + d] - pref[i]) : (pref[m - 1] - pref[i]);
+            dp[0][i] = (sum1 + sum2) % MOD;
+        }
+    }
+    
     for (ll i = 1; i < n; i++)
     {
+        vector<ll> pref1(m, 0);
+        vector<ll> pref2(m, 0);
+        pref2[0] = dp[i - 1][0];
+        for (ll j = 1; j < m; j++)
+        {
+            pref2[j] = (pref2[j - 1] + dp[i - 1][j]) % MOD;
+        }
         for (ll j = 0; j < m; j++)
         {
-            if (grid[i][j] == 'X')
+            ll ans = 0;
+            if (grid[i][j] == 1)
             {
-                ll max_top = 0;
-                for (ll k = 0; k < m; k++)
-                {
-                    if (grid[i - 1][k] == 'X' && (1 + (j - k) * (j - k)) <= d * d)
-                    {
-                        max_top = (max_top + dp[i - 1][k]) % MOD;
-                    }
-                }
-                dp[i][j] = max_top;
+                ll left = max(0LL, j - (ll)floor(sqrt(d * d - 1)));
+                ll right = min(m - 1, j + (ll)floor(sqrt(d * d - 1)));
+
+                ans = (pref2[right] - (left > 0 ? pref2[left - 1] : 0) + MOD) % MOD;
+            }
+            pref1[j] = (j == 0) ? ans : (pref1[j - 1] + ans) % MOD;
+        }
+
+        for (ll j = 0; j < m; j++)
+        {
+            if (grid[i][j] == 1)
+            {
+                ll sum1 = pref1[j] - (j - d - 1 >= 0 ? pref1[j - d - 1] : 0);
+                ll sum2 = (j + d < m) ? (pref1[j + d] - pref1[j]) : (pref1[m - 1] - pref1[j]);
+                dp[i][j] = (sum1 + sum2) % MOD;
             }
         }
     }
 
-    // Propagate max values row-wise
-    for (ll i = 0; i < n; i++)
-    {
-        ll maxi1 = -1, maxi2 = -1, maxi = 0;
-        for (ll j = 0; j < m; j++)
-        {
-            if (dp[i][j] >= maxi)
-            {
-                maxi2 = maxi1;
-                maxi1 = j;
-                maxi = dp[i][j];
-            }
-        }
-        for (ll j = 0; j < m; j++)
-        {
-            if (j != maxi1)
-            {
-                dp[i][j] = (dp[i][j] + dp[i][maxi1]) % MOD;
-            }
-            else
-            {
-                dp[i][j] = (dp[i][j] + dp[i][maxi2]) % MOD;
-            }
-        }
-    }
-    cout<<"HELLO B"
-    forn(i,n){
-        for(int j=0;j<m;j++){
-            cout<<dp[i][j]<<" ";
-        }
-        cout<<"\n";
-    }
-    ll ans = 0;
+    ll result = 0;
     for (ll j = 0; j < m; j++)
-        ans = (ans + dp[n - 1][j]) % MOD;
-
-    cout << ans << "\n";
+    {
+        result = (result + dp[n - 1][j]) % MOD;
+    }
+    cout << result << "\n";
 }
-
 int main()
 {
     fast_cin();
