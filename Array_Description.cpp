@@ -105,8 +105,6 @@ vector<vector<long long>> matrixmultiply(const vector<vector<long long>>& matrix
     return result;
 }
 
-
-
 //Factorial by vector
 //vll fact;
 //void factorials(ll mod, ll maxi){fact.resize(maxi + 1, 1); for(int i = 2; i<= maxi ; i++) fact[i] = (fact[i-1]*i)%mod ;}
@@ -118,17 +116,128 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
 
-
+ll modd=1e9+7;
 void solve() {
+    ll n,x;
+    cin>>n>>x;
+    vll a(n);
+    forn(i,n)cin>>a[i];
+
+    vll prev(x+1,0);
+    if(n==1){
+        if(a[0]!=0){
+            cout<<1<<endl;
+            return;
+        }else{
+            cout<<x<<endl;
+            return;
+        }
+    }
+    for(ll i=1;i<=x;i++){
+        if(a[0]!=0){
+            if(i==a[0]){
+                prev[i]=1;
+            }
+        }else{
+            if(a[1]==0){
+                prev[i]=1;
+            }else if(a[1]==x||a[1]==1){
+                if(i==x||i==1){
+                    prev[i]=1;
+                }else if(i==x-1||i==2){
+                    prev[i]=1;
+                }
+            }else{
+                if(i==a[1]||i==a[1]-1||i==a[i]+1)
+                prev[i]=1;
+            }
+        }
+    }
     
+
+    for(ll i=1;i<n;i++){
+        vll curr(x+1,0);
+        
+        if(a[i]==0){
+                for(ll j=1;j<=x;j++){
+                if(j==1){
+                    curr[j]+=prev[j];
+                    if(curr[j]<0){
+                        curr[j]+=modd;
+                    }
+                    curr[j]=curr[j]%modd;
+                    if(j+1<=x){
+                        curr[j]+=prev[j+1];
+                        if(curr[j]<0){
+                           curr[j]+=modd;
+                        }
+                        curr[j]=curr[j]%modd;
+                    }
+                }else if(j==x){
+                    curr[j]+=prev[j];
+                    if(curr[j]<0){
+                        curr[j]+=modd;
+                    }
+                    curr[j]=curr[j]%modd;
+                    if(j-1>=1){
+                        curr[j]+=prev[j-1];
+                        if(curr[j]<0){
+                           curr[j]+=modd;
+                        }
+                        curr[j]=curr[j]%modd;
+                    }
+                }
+                else{
+                    curr[j]+=prev[j];
+                    if(curr[j]<0){
+                        curr[j]+=modd;
+                    }
+                    curr[j]=curr[j]%modd;
+                    if(j+1<=x){
+                        curr[j]+=prev[j+1];
+                        if(curr[j]<0){
+                           curr[j]+=modd;
+                        }
+                        curr[j]=curr[j]%modd;
+                    }
+                    if(j-1>=1){
+                        curr[j]+=prev[j-1];
+                        if(curr[j]<0){
+                           curr[j]+=modd;
+                        }
+                        curr[j]=curr[j]%modd;
+                    }
+                }
+            }
+        }else{
+            curr[a[i]]=prev[a[i]];
+            if(a[i]-1>=1){
+             curr[a[i]]+=prev[a[i]-1];
+             curr[a[i]]=curr[a[i]]%modd;
+            }
+            if(a[i]+1<=x){
+              curr[a[i]]+=prev[a[i]+1];
+              curr[a[i]]=curr[a[i]]%modd;
+            }
+         }
+        prev=curr;
+    }
+    ll sum=0;
+    for(ll i=1;i<=x;i++){
+        //cout<<prev[i]<<endl;
+        sum+=prev[i];
+        sum=sum%modd;
+    }
+    cout<<sum<<endl;
 }
 
 int main() {
     fast_cin();
-    ll t;
-    cin >> t;
-    for(int it=1;it<=t;it++) {
-        solve();
-    }
-    return 0;
+    // ll t;
+    // cin >> t;
+    // for(int it=1;it<=t;it++) {
+    //     solve();
+    // }
+    // return 0;
+    solve();
 }
