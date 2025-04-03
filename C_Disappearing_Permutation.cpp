@@ -121,44 +121,59 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 void solve() {
     ll n;
-    cin >> n;
-    vll v(n , 0), leftmax(n, 0), rightmax(n ,0) ;
-    forn(i, n) cin >> v[i] ;
-    ll minileft=LLONG_MAX, ind = n-1;
-    for(ll i=n-1;i>=0;i--){
-        leftmax[i] = ind ;
-        if(v[i] > minileft){
-            leftmax[i] = ind;
-            ind = i ;
+    cin>>n;
+    vll a(n);
+    forn(i,n)cin>>a[i];
+    vll b(n);
+    forn(i,n)cin>>b[i];
+    unordered_map<ll,ll>mp;
+    unordered_map<ll,ll>sze;
+    forn(i,n){
+        mp[i+1]=a[i];
+    }
+    vll visited(n+1,0);
+    int ind=0;
+    for (int i = 1; i <= n; i++) {
+        if (!visited[i]) {
+            int size = 0, x = i;
+            ind++;
+            vector<int> el;
+            while (!visited[x]) {
+                visited[x] = 1;
+                el.push_back(x);
+                x = a[x - 1];
+                size++;
+            }
+
+            for (int num : el) {
+                mp[num] = ind;
+            }
+            sze[ind] = size;
         }
-        minileft=v[i];
-        
     }
-    ll miniright = LLONG_MAX;
-    ind = 0;
-    for(ll i = 0; i< n; i++){
-        rightmax[i] = ind ;
-        if(v[i] > miniright){
-            rightmax[i] = ind;
-            ind = i ;
+    unordered_map<ll,ll>checked;
+    vll ans(n,0);
+    ll ans1=0;
+    forn(i,n){
+        ll q=b[i];
+        int c=mp[q];
+        if(checked[c]==0){
+            ans1+=sze[c];
+            checked[c]++;
         }
-        miniright=v[i];
+        ans[i]=ans1;
     }
-    vll ans(n, 0) ;
-    for(ll i = 0; i< n;i++){
-        ans[i] = (leftmax[i] - i ) + (i - rightmax[i]) ;
-    }
-    forn(i, n) cout << ans[i]<<" ";
+    forn(i,n)cout<<ans[i]<<" ";
+    cout<<endl;
 
 }
 
 int main() {
     fast_cin();
-    // ll t;
-    // cin >> t;
-    // for(int it=1;it<=t;it++) {
-    //     solve();
-    // }
-    // return 0;
-    solve();
+    ll t;
+    cin >> t;
+    for(int it=1;it<=t;it++) {
+        solve();
+    }
+    return 0;
 }

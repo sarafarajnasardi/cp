@@ -116,49 +116,36 @@ bool isPrime(ll n){if(n<=1)return false;if(n<=3)return true;if(n%2==0||n%3==0)re
 bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log2(n)));}
 
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
+ll dp[27][10001];
 
+ll rec(vector<ll> &cha, ll i, ll oddSum, ll sum) {
+    if (i == 26) return (oddSum == sum/2) ? 1 : 0;  
 
+    if (dp[i][oddSum] != -1) return dp[i][oddSum];
+
+    ll ans = 0;
+    ans = (ans + rec(cha, i + 1, oddSum + cha[i], sum)) % MOD;  
+    ans = (ans + rec(cha, i + 1, oddSum, sum)) % MOD;
+
+    return dp[i][oddSum] = ans;
+}
 
 void solve() {
-    ll n;
-    cin >> n;
-    vll v(n , 0), leftmax(n, 0), rightmax(n ,0) ;
-    forn(i, n) cin >> v[i] ;
-    ll minileft=LLONG_MAX, ind = n-1;
-    for(ll i=n-1;i>=0;i--){
-        leftmax[i] = ind ;
-        if(v[i] > minileft){
-            leftmax[i] = ind;
-            ind = i ;
-        }
-        minileft=v[i];
-        
-    }
-    ll miniright = LLONG_MAX;
-    ind = 0;
-    for(ll i = 0; i< n; i++){
-        rightmax[i] = ind ;
-        if(v[i] > miniright){
-            rightmax[i] = ind;
-            ind = i ;
-        }
-        miniright=v[i];
-    }
-    vll ans(n, 0) ;
-    for(ll i = 0; i< n;i++){
-        ans[i] = (leftmax[i] - i ) + (i - rightmax[i]) ;
-    }
-    forn(i, n) cout << ans[i]<<" ";
-
+    vector<ll> freq(26);
+    for (ll i = 0; i < 26; i++) cin >> freq[i];
+    ll sum = accumulate(freq.begin(), freq.end(), 0LL);
+    
+    memset(dp, -1, sizeof(dp));
+    cout << rec(freq, 0, 0, sum) << endl;
 }
+
 
 int main() {
     fast_cin();
-    // ll t;
-    // cin >> t;
-    // for(int it=1;it<=t;it++) {
-    //     solve();
-    // }
-    // return 0;
-    solve();
+    ll t;
+    cin >> t;
+    for(int it=1;it<=t;it++) {
+        solve();
+    }
+    return 0;
 }

@@ -121,44 +121,16 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 void solve() {
     ll n;
-    cin >> n;
-    vll v(n , 0), leftmax(n, 0), rightmax(n ,0) ;
-    forn(i, n) cin >> v[i] ;
-    ll minileft=LLONG_MAX, ind = n-1;
-    for(ll i=n-1;i>=0;i--){
-        leftmax[i] = ind ;
-        if(v[i] > minileft){
-            leftmax[i] = ind;
-            ind = i ;
-        }
-        minileft=v[i];
-        
-    }
-    ll miniright = LLONG_MAX;
-    ind = 0;
-    for(ll i = 0; i< n; i++){
-        rightmax[i] = ind ;
-        if(v[i] > miniright){
-            rightmax[i] = ind;
-            ind = i ;
-        }
-        miniright=v[i];
-    }
-    vll ans(n, 0) ;
-    for(ll i = 0; i< n;i++){
-        ans[i] = (leftmax[i] - i ) + (i - rightmax[i]) ;
-    }
-    forn(i, n) cout << ans[i]<<" ";
-
+    cin>>n;
+    cout<<2*n<<endl;
 }
 
 int main() {
     fast_cin();
-    // ll t;
-    // cin >> t;
-    // for(int it=1;it<=t;it++) {
-    //     solve();
-    // }
-    // return 0;
-    solve();
+    ll t;
+    cin >> t;
+    for(int it=1;it<=t;it++) {
+        solve();
+    }
+    return 0;
 }

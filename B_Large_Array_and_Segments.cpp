@@ -120,45 +120,43 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 
 void solve() {
-    ll n;
-    cin >> n;
-    vll v(n , 0), leftmax(n, 0), rightmax(n ,0) ;
-    forn(i, n) cin >> v[i] ;
-    ll minileft=LLONG_MAX, ind = n-1;
-    for(ll i=n-1;i>=0;i--){
-        leftmax[i] = ind ;
-        if(v[i] > minileft){
-            leftmax[i] = ind;
-            ind = i ;
+    ll n, k, x;
+    cin >> n >> k >> x;
+    vll a(n), pref(n, 0);
+
+    forn(i, n) cin >> a[i];
+
+    pref[0] = a[0];
+    for (ll i = 1; i < n; i++) {
+        pref[i] = pref[i - 1] + a[i];
+    }
+
+    ll total_sum = pref[n - 1];
+    ll ans = 0;
+
+    for (int i = 0; i < n; i++) {
+        ll remaining_sum = x - (i == 0 ? total_sum : total_sum - pref[i - 1]);
+        if(remaining_sum<0){
+            ans+=k;
+            continue;
         }
-        minileft=v[i];
-        
-    }
-    ll miniright = LLONG_MAX;
-    ind = 0;
-    for(ll i = 0; i< n; i++){
-        rightmax[i] = ind ;
-        if(v[i] > miniright){
-            rightmax[i] = ind;
-            ind = i ;
+        ll cycles = remaining_sum / total_sum;
+        ll remainder = remaining_sum % total_sum;
+        //cout<<remainder<<endl;
+        if (cycles < k) {
+            ans += k - cycles - (remainder > 0);
         }
-        miniright=v[i];
     }
-    vll ans(n, 0) ;
-    for(ll i = 0; i< n;i++){
-        ans[i] = (leftmax[i] - i ) + (i - rightmax[i]) ;
-    }
-    forn(i, n) cout << ans[i]<<" ";
+    cout << ans << endl;
 
 }
 
 int main() {
     fast_cin();
-    // ll t;
-    // cin >> t;
-    // for(int it=1;it<=t;it++) {
-    //     solve();
-    // }
-    // return 0;
-    solve();
+    ll t;
+    cin >> t;
+    for(int it=1;it<=t;it++) {
+        solve();
+    }
+    return 0;
 }
