@@ -116,12 +116,52 @@ bool isPrime(ll n){if(n<=1)return false;if(n<=3)return true;if(n%2==0||n%3==0)re
 bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log2(n)));}
 
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
+vector<int> getAllPrimeDivisors(int n) {
+    vector<int> primes;
 
+    while (n % 2 == 0) {
+        primes.push_back(2);
+        n /= 2;
+    }
 
+    for (int i = 3; i * i <= n; i += 2) {
+        while (n % i == 0) {
+            primes.push_back(i);
+            n /= i;
+        }
+    }
+
+    if (n > 1)
+        primes.push_back(n);
+
+    return primes;
+}
 
 void solve() {
-    
+    int n;
+    cin >> n;
+    vi a(n);
+    unordered_map<int,int>mp;
+    forn(i, n) {
+        cin >> a[i];
+        vector<int>primes=getAllPrimeDivisors(a[i]);
+        for(auto x:primes){
+            //cout<<x<<" ";
+            mp[x]++;
+        }
+        //cout<<endl;
+    }
+    for(auto x:mp){
+        if(x.second%n!=0){
+                cout<<"NO"<<endl;
+                return;
+        }
+        
+    }
+    cout<<"YES"<<endl;
+
 }
+
 
 int main() {
     fast_cin();
