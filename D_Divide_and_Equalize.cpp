@@ -116,29 +116,12 @@ bool isPrime(ll n){if(n<=1)return false;if(n<=3)return true;if(n%2==0||n%3==0)re
 bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log2(n)));}
 
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
-ll dp[27][10001];
 
-int rec(vector<ll>actual,ll i,ll target,ll cnt){
-    if(target==0)return cnt;
 
-    ll take=
-}
+
 void solve() {
-    vector<ll> freq(26);
-    for (ll i = 0; i < 26; i++) cin >> freq[i];
-    ll sum = accumulate(freq.begin(), freq.end(), 0LL);
-    vector<ll>actual;
-    for(auto x:freq){
-        if(x>0){
-            actual.push_back(x);
-        }
-    }
-    ll n=actual.size();
-    ll odssum=sum/2;
     
-
 }
-
 
 int main() {
     fast_cin();
