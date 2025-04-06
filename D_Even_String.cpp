@@ -144,8 +144,8 @@ vector<vector<long long>> matrixmultiply(const vector<vector<long long>> &matrix
 }
 
 // Factorial by vector
-// vll fact;
-// void factorials(ll mod, ll maxi){fact.resize(maxi + 1, 1); for(int i = 2; i<= maxi ; i++) fact[i] = (fact[i-1]*i)%mod ;}
+vll fact;
+void factorials(ll mod, ll maxi){fact.resize(maxi + 1, 1); for(int i = 2; i<= maxi ; i++) fact[i] = (fact[i-1]*i)%mod ;}
 // ll nCr(ll n, ll r, ll mod){ if(r > n) return 0; ll x = (fact[r]*fact[n-r])%mod ;ll ans = (fact[n] * (powermod(x,mod-2, mod)))%mod;return ans;}
 bool isPrime(ll n)
 {
@@ -184,45 +184,42 @@ void solve()
     for (ll i = 0; i < 26; i++)
         cin >> freq[i];
     ll sum = accumulate(freq.begin(), freq.end(), 0LL);
-    vector<ll> actual;
+    vector<ll> v;
     for (auto x : freq)
     {
         if (x > 0)
         {
-            actual.push_back(x);
+            v.push_back(x);
         }
     }
-    ll n = actual.size();
+    ll n = v.size();
     ll odssum = (sum + 1) / 2;
-    vll prev(odssum + 4, 0);
-    for (ll i = 0; i < n; i++)
-    {
-        if (actual[0] <= odssum)
-        {
-            prev[actual[0]] = 1;
-        }
-    }
+    vll prev(odssum + 1, 0);
+    prev[0] = 1;
+    if(v[0] <= odssum) prev[v[0]] = 1;
+
     for (ll i = 1; i < n; i++)
     {
-        vll curr(odssum + 4, 0);
+        vll curr(odssum + 1, 0);
         for (ll j = 0; j <= odssum; j++)
-        {
-            ll take = 0;
-            if (j - actual[i] >= 0)
-            {
-                take = 1 + prev[j - actual[i]];
-            }
-            ll notake = prev[j];
-            curr[j] = take + notake;
+        {   
+            curr[j] = prev[j] ;
+            if(v[i] <= j) curr[j] = (curr[j] + prev[j - v[i]]) %MOD ;
         }
         prev = curr;
     }
-
-    cout << prev[odssum] << endl;
+    ll ans=1;
+    forn(i,n){
+        ans=(ans*fact[v[i]])%MOD;
+    }
+    ll nur=(((fact[odssum]*fact[sum-odssum])%MOD)*prev[odssum])%MOD;
+    cout<<(nur*binexp(ans,MOD-2,MOD))%MOD<<endl;
+   
 }
 
 int main()
 {
+    factorials(MOD,1e6+7);
     fast_cin();
     ll t;
     cin >> t;
