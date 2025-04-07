@@ -120,7 +120,33 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 
 void solve() {
-    
+    ll n;
+    cin >> n;
+    vll a(n), b(n);
+    forn(i, n) cin >> a[i];
+    forn(i, n) cin >> b[i];
+
+    vpll ans;
+
+    forn(i, n) {
+        ll j = n - 1 - i;
+        if (a[i] == b[j]) continue;
+        swap(a[i], a[j]);
+        swap(b[i], b[j]);
+        ans.pb({i + 1, j + 1});
+    }
+
+    forn(i, n) {
+        ll j = n - 1 - i;
+        if (a[i] != b[j]){
+            cout<<-1<<ln;
+            return;
+        }
+    }
+    cout << ans.size() << ln;
+    for (auto &x : ans) {
+        cout << x.first << " " << x.second << ln;
+    }
 }
 
 int main() {
