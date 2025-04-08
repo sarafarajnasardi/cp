@@ -121,67 +121,24 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 void solve() {
     ll n;
-    cin >> n;
-    vll a(n), b(n);
-    forn(i, n) cin >> a[i];
-    forn(i, n) cin >> b[i];
-
-    vpll ans;
-    unordered_map<ll,ll>ind1;
-    unordered_map<ll,ll>ind2;
-    int c=0;
-    int insa=-1;
-    forn(i, n) {
-        ind1[a[i]]=i;
-        ind2[b[i]]=i;
-        if(a[i]==b[i]){
-            c++;
-            insa=i;
+    cin>>n;
+    vll a(n);
+    forn(i,n)cin>>a[i];
+    vvll dp(n,vll(2,0));
+    if(a[0]==1){
+        dp[0][1]=1;
+    }
+    for(ll i=1;i<n;i++){
+        forn(j,2){
+            ll take=dp[i-1][j];
+            if(j==1&&a[i]==1){
+                take++;
+            }
+            ll notake=dp[i-1][j];
+            dp[i][j]=min(take,notake);
         }
     }
-    if(n%2==0&&c>0){
-        cout<<-1<<ln;
-        return;
-    }
-    if(n%2!=0&&c>1){
-        cout<<-1<<ln;
-        return;
-    }
-
-    if(c>0&&n%2!=0&&insa!=n/2){
-        ll y=n/2;
-        swap(a[y],a[insa]);
-        swap(b[y],b[insa]);
-        ind1[a[y]]=insa;
-        ind2[b[y]]=insa;
-        ind1[a[insa]]=y;
-        ind2[b[insa]]=y;
-        ans.pb({insa+1,y+1});
-    }
-    forn(i,n){
-        if(b[i]!=a[ind2[a[i]]]){
-            cout<<b[i]<<" "<<a[ind2[a[i]]]<<endl;
-            cout<<i<<"h:"<<-1<<ln;
-            return;
-        }
-    }
-    forn(i,n/2){
-        ll j=n-1-i;
-         if(a[i]!=b[j]){
-            ll y=ind2[a[i]];
-            swap(a[y],a[j]);
-            swap(b[y],b[j]);
-            ind1[a[y]]=j;
-            ind2[b[y]]=j;
-            ind1[a[j]]=y;
-            ind2[b[j]]=y;
-            ans.pb({j+1,y+1});
-        }
-    }
-    cout << ans.size() << ln;
-    for (auto &x : ans) {
-        cout << x.first << " " << x.second << ln;
-    }
+    cout<<min(dp[n-1][0],dp[n-1][1])<<endl;
 }
 
 int main() {

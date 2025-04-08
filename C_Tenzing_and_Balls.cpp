@@ -121,67 +121,46 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 
 void solve() {
     ll n;
-    cin >> n;
-    vll a(n), b(n);
-    forn(i, n) cin >> a[i];
-    forn(i, n) cin >> b[i];
-
-    vpll ans;
-    unordered_map<ll,ll>ind1;
-    unordered_map<ll,ll>ind2;
-    int c=0;
-    int insa=-1;
-    forn(i, n) {
-        ind1[a[i]]=i;
-        ind2[b[i]]=i;
-        if(a[i]==b[i]){
-            c++;
-            insa=i;
-        }
-    }
-    if(n%2==0&&c>0){
-        cout<<-1<<ln;
-        return;
-    }
-    if(n%2!=0&&c>1){
-        cout<<-1<<ln;
-        return;
-    }
-
-    if(c>0&&n%2!=0&&insa!=n/2){
-        ll y=n/2;
-        swap(a[y],a[insa]);
-        swap(b[y],b[insa]);
-        ind1[a[y]]=insa;
-        ind2[b[y]]=insa;
-        ind1[a[insa]]=y;
-        ind2[b[insa]]=y;
-        ans.pb({insa+1,y+1});
-    }
+    cin>>n; 
+    vll a(n);
+    vll prev(n,-1);
+    unordered_map<ll,ll>mp;
     forn(i,n){
-        if(b[i]!=a[ind2[a[i]]]){
-            cout<<b[i]<<" "<<a[ind2[a[i]]]<<endl;
-            cout<<i<<"h:"<<-1<<ln;
-            return;
+        cin>>a[i];
+        if(mp.find(a[i])!=mp.end()){
+            prev[i]=mp[a[i]];
         }
+        mp[a[i]]=i;
     }
-    forn(i,n/2){
-        ll j=n-1-i;
-         if(a[i]!=b[j]){
-            ll y=ind2[a[i]];
-            swap(a[y],a[j]);
-            swap(b[y],b[j]);
-            ind1[a[y]]=j;
-            ind2[b[y]]=j;
-            ind1[a[j]]=y;
-            ind2[b[j]]=y;
-            ans.pb({j+1,y+1});
+    
+    vll dp(n,0);
+    ll maxi=0;
+    forn(i,n){
+        if(i==0)continue;
+        if(prev[i]==0){
+            dp[i]=max(maxi,i-prev[i]+1);
+            maxi=max(maxi,dp[i]);
+            continue;
         }
+        if(prev[i]==-1){
+            dp[i]=maxi;
+            continue;
+        }
+        ll take=dp[prev[i]];
+        if(dp[prev[i]]<=dp[prev[i]-1]){
+            take=dp[prev[i]-1];
+        }
+        else if(prev[prev[i]]!=-1){
+           take--;
+        }
+        dp[i]=max(maxi,(i-prev[i]+1)+take);
+        maxi=max(maxi,dp[i]);
     }
-    cout << ans.size() << ln;
-    for (auto &x : ans) {
-        cout << x.first << " " << x.second << ln;
-    }
+    // cout<<n<<endl;
+    // forn(i,n)cout<<dp[i]<<" ";
+    // cout<<endl;
+    cout<<dp[n-1]<<endl;
+    return;
 }
 
 int main() {
