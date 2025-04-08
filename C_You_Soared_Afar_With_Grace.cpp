@@ -127,15 +127,35 @@ void solve() {
     forn(i, n) cin >> b[i];
 
     vpll ans;
-
+    unordered_map<ll,ll>ind1;
+    unordered_map<ll,ll>ind2;
     forn(i, n) {
-        ll j = n - 1 - i;
-        if (a[i] == b[j]) continue;
-        swap(a[i], a[j]);
-        swap(b[i], b[j]);
-        ans.pb({i + 1, j + 1});
+        ind1[a[i]]=i;
+        ind2[b[i]]=i;
     }
-
+    forn(i,n){
+        ll j=n-1-i;
+        if(a[i]==b[i]&&n%2!=0&&i!=n/2){
+            ll y=n/2;
+            swap(a[y],a[i]);
+            swap(b[y],b[i]);
+            ind1[a[y]]=i;
+            ind2[b[y]]=i;
+            ind1[a[i]]=y;
+            ind2[b[i]]=y;
+            ans.pb({i+1,y+1});
+        }
+        else if(a[i]!=b[j]){
+            ll y=ind2[a[i]];
+            swap(a[y],a[j]);
+            swap(b[y],b[j]);
+            ind1[a[y]]=j;
+            ind2[b[y]]=j;
+            ind1[a[j]]=y;
+            ind2[b[j]]=y;
+            ans.pb({j+1,y+1});
+        }
+    }
     forn(i, n) {
         ll j = n - 1 - i;
         if (a[i] != b[j]){
