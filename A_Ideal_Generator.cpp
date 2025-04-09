@@ -122,39 +122,11 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 void solve() {
     ll n;
     cin>>n;
-    vll a(n);
-    forn(i,n)cin>>a[i];
-    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(2, vector<ll>(2, 0)));
-    forn(i,n){
-        forn(j,2){
-            forn(k,2){
-              if(i==0){
-                if(a[i]==1){
-                    dp[i][j][k]=1;
-                }
-                continue;
-              }
-              if(j==1&&k==1){
-                dp[i][j][k]=dp[i-1][j][k];
-              }
-              if(j==0&&k==0){
-                dp[i][j][k]=dp[i-1][j][k];
-                if(a[i]==1){
-                    dp[i][j][k]++;
-                }
-              }
-              if((j==1&&k==0)||(j==0&&k==1)){
-                 ll take=dp[i-1][j][k];
-                 ll notake=dp[i-1][j][k];
-                 if(a[i]==1){
-                    take++;
-                 }
-                 dp[i][j][k]=min(take,notake);
-              }
-        }
-        }
+    if(n%2==0){
+        cout<<"NO"<<endl;
+    }else{
+        cout<<"YES"<<endl;
     }
-    cout<<min({dp[n-1][0][0],dp[n-1][1][0],dp[n-1][0][1],dp[n-1][1][1]})<<endl;
 }
 
 int main() {
