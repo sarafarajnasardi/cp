@@ -123,9 +123,23 @@ void solve() {
     ll n;
     cin>>n;
     vll a(n);
-    forn(i,n)cin>>a[i];
-    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(2, vector<ll>(2, 0)));
-    
+    ll mini=LLONG_MAX;
+    ll ind=-1;
+    forn(i,n){
+        cin>>a[i];
+        if(a[i]>mini){
+            maxi=a[i];
+            ind=i;
+        }
+    }
+    forn(i,n){
+        if(abs(a[i]-mini)<abs(ind-i)){
+            cout<<"NO"<<ln;
+            return;
+        }
+    }
+    cout<<"YES"<<ln;
+
 }
 
 int main() {

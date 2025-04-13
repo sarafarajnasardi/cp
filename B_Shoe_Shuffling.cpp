@@ -123,9 +123,34 @@ void solve() {
     ll n;
     cin>>n;
     vll a(n);
-    forn(i,n)cin>>a[i];
-    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(2, vector<ll>(2, 0)));
-    
+    vpll vp(n);
+    vll ans(n);
+    forn(i,n){
+        cin>>a[i];
+        vp[i] = {a[i], i};
+    }
+    sort(vp.begin(),vp.end());
+    ll ind=-1;
+    forn(i,n){
+        if (i<n-1&&vp[i].first==vp[i+1].first)
+        {
+            if(ind==-1){
+                ind=vp[i].se;
+            }
+           ans[vp[i].se]=vp[i+1].se;
+           //dbg(vp[i].se);
+        }else if(ind!=-1){
+           ans[vp[i].se]=ind;
+           ind=-1;
+        }else{
+            cout<<-1<<ln;
+            return;
+        }
+    }
+    forn(i,n){
+        cout<<ans[i]+1<<" ";
+    }
+    cout<<ln;
 }
 
 int main() {
