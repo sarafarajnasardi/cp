@@ -78,6 +78,7 @@ ll moduloMultiplication(ll a,ll b,ll mod){ll res = 0;a %= mod;while (b){if (b & 
 ll powermod( ll x, ll y, ll mod){ ll ans = 1;if( y == 0) return 1;while(y){   if(y%2) ans = (1ll*ans*x)%mod;    x = (1ll*x*x)%mod;    y /= 2;}return ans;}
 
 ll binexp(ll a , ll b , ll m){
+    
    ll result = 1;
    while(b > 0){
       if(b & 1){
