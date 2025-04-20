@@ -177,108 +177,33 @@ bool isPerfectSquare(ll x)
     }
     return false;
 }
-void solve() {
-    ll x, y;
-    cin >> x >> y;
-    bitset<64> a(x), b(y);
-    string s = a.to_string(), t = b.to_string();
 
-    reverse(s.begin(), s.end());
-    reverse(t.begin(), t.end());
-
-    int ind = -1;
-    for (int i = 0; i < 64; i++) {
-        if (s[i] == '1' || t[i] == '1') {
-            ind = i;
+void solve()
+{
+    ll n, k;
+    cin >> n >> k;
+    vll a(n), b(n);
+    forn(i, n) cin >> a[i];
+    forn(i, n) cin >> b[i];
+    ll sum1 = 0;
+    vpll a1(n);
+    forn(i, n)
+    {
+        a1[i] = {min(a[i],b[i]), max(a[i],b[i])};
+    }
+    ll sum=0;
+    ll t=k;
+    sort(a1.begin(), a1.end(),greater<pair<ll, ll>>());
+    forn(i,n){
+        if(t>1){
+            sum+=a1[i].first+a1[i].se;
+            t--;
+        }else{
+            sum+=a1[i].se;
         }
     }
 
-    int carry1 = 0, carry2 = 0;
-    string ans = "";
-
-    for (int i = 0; i < 64; i++) {
-        // Apply carry1 to s
-        if (carry1) {
-            if (s[i] == '1') {
-                s[i] = '0';
-            } else {
-                s[i] = '1';
-                carry1 = 0;
-                if (i > ind) ind = i;
-            }
-        }
-
-        // Apply carry2 to t
-        if (carry2) {
-            if (t[i] == '1') {
-                t[i] = '0';
-            } else {
-                t[i] = '1';
-                carry2 = 0;
-                if (i > ind) ind = i;
-            }
-        }
-
-        if (s[i] == '1' && t[i] == '1') {
-            s[i] = t[i] = '0';
-            ans += '1';
-            carry1 = carry2 = 1;
-        } else if (s[i] == '0' && t[i] == '0') {
-            ans += '0';
-        } else {
-            if (i < 63 && s[i + 1] == '0' && t[i + 1] == '0' && i < ind) {
-                if (s[i] == '1') {
-                    ans += '1';
-                    s[i] = '0';
-                    carry1 = 1;
-                    t[i] = '1';
-                } else {
-                    ans += '1';
-                    t[i] = '0';
-                    carry2 = 1;
-                    s[i] = '1';
-                }
-            } else if (i < 63 && s[i + 1] == '1' && t[i + 1] == '1') {
-                if (s[i] == '1') {
-                    ans += '1';
-                    s[i] = '0';
-                    carry1 = 1;
-                    t[i] = '1';
-                } else {
-                    ans += '1';
-                    t[i] = '0';
-                    carry2 = 1;
-                    s[i] = '1';
-                }
-            }else if (i < 63 && s[i + 1] == '1' && t[i + 1] == '0'&& s[i] == '1' && t[i] == '0') {
-                ans += '1';
-                s[i] = '0';
-                t[i] = '0';
-                carry1 = 1;
-            } else if (i < 63 && s[i + 1] == '0' && t[i + 1] == '1' && s[i] == '0' && t[i] == '1') {
-                ans += '1';
-                s[i] = '0';
-                t[i] = '0';
-                carry2 = 1;
-            }else{
-                ans+='0';
-            }
-        }
-    }
-
-    if (carry1 && carry2) {
-        cout << -1 << ln;
-        return;
-    }
-
-    reverse(ans.begin(), ans.end());
-    if (ans.find('1') == string::npos) {
-        cout << 0 << ln;
-        return;
-    }
-
-    ll res = stoll(ans, nullptr, 2);
-    cout << res << ln;
+    cout << sum+1 << ln;
 }
 
 int main()
