@@ -16,6 +16,7 @@ int main() {
     while (getline(file, line)) {
         vector<string> c;
         string x = "";
+        
         for (auto t : line) {
             if (t == ',') {
                 c.push_back(x);
