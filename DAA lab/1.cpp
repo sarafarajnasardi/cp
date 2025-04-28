@@ -98,3 +98,69 @@ using namespace std;
 //     }
 //     cout<<dist[n-1]<<endl;
 // }
+
+class DSU{
+    public:
+    vector<int>parent;
+    DSU(int n){
+        parent.resize(n+1,0);
+        for(int i=0;i<=n;i++){
+            parent[i]=i;
+        }
+    }
+
+    int findUpar(int node){
+        if(node==parent[node])return node;
+        return parent[node]=findUpar(parent[node]);
+    }
+    void uni(int u,int v){
+        parent[findUpar(u)]=findUpar(v);
+    }
+};
+
+// int main(){
+//     int n=4;
+//     vector<tuple<int,int,int>> edges = {
+//         {2,0,1},{1,0,2},{1,1,2},{2,2,3},{1,3,4},{2,4,2}
+//     };
+//     sort(edges.begin(), edges.end());
+//     DSU obj(n);
+//     int mst=0;
+//     for(auto x:edges){
+//         int w=get<0>(x);
+//         int u=get<1>(x);
+//         int v=get<2>(x);
+//         if(obj.findUpar(u)!=obj.findUpar(v)){
+//             mst+=w;
+//             obj.uni(u,v);
+//         }
+//     }
+//     cout<<mst<<endl;
+// }
+
+int main(){
+    int n=4;
+    vector<vector<pair<int,int>>>adj(n+1);
+    adj[0].push_back({1,2}); adj[0].push_back({2,4});
+    adj[1].push_back({2,1}); adj[1].push_back({3,7});
+    adj[2].push_back({4,3});
+    adj[3].push_back({4,1});
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+    pq.push({0,0});
+    vector<int>visited(n+1,0);
+    int mst=0;
+    while(!pq.empty()){
+        auto it=pq.top();pq.pop();
+        int wt=it.second;
+        int node=it.first;
+        if(visited[node]){
+            continue;
+        }
+        mst+=wt;
+        visited[node]=1;
+        for(auto x:adj[node]){
+            pq.push({x.first,x.second});
+        }
+    }
+    cout<<mst<<endl;
+}
