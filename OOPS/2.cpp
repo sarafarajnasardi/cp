@@ -1,27 +1,40 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-class A1 {
+class A {
 public:
-    int val1;
-    A1(int v) : val1(v) {}
+    int m = 10;
 };
 
-class A2 : public A1 {
+class B :virtual public A {
 public:
-    int val2;
-    A2(int v1, int v2) : A1(v1), val2(v2) {}
+    int m = 20;
 };
 
-class A3 : public A2 {
+class C :virtual public A {
 public:
-    int val3;
-    A3(int v1, int v2, int v3) : A2(v1, v2), val3(v3) {}
-    void show() { cout << "Values: " << val1 << ", " << val2 << ", " << val3 << endl; }
+    int m = 30;
+};
+
+class D :virtual public A {
+public:
+    int m = 40;
+};
+
+class E : public B, public C, public D {
+public:
+    int m = 50;
+    void print() {
+        cout << "E::m = " << m << endl;
+        cout << "B::m = " << B::m << endl;
+        cout << "C::m = " << C::m << endl;
+        cout << "D::m = " << D::m << endl;
+        cout << "A from B = "<< A::m << endl;
+    }
 };
 
 int main() {
-    A3 obj(1, 2, 3);
-    obj.show();
+    E obj;
+    obj.print();
     return 0;
 }
