@@ -117,27 +117,32 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
-bool isPowerGE3(ll a, ll b) {
-    if (a < 1 || b <= 1) return false;
-    ll k = 0;
-    while (a % b == 0) {
-        a /= b;
-        k++;
-    }
-    return (a == 1 && k >= 3);
-}
+
 
 void solve() {
     ll n;
     cin>>n;
-    for(ll i=2;i<=1000;i++){
-        ll x=n*(i-1)+1;
-        if(isPowerGE3(x,i)){
-            cout<<"YES"<<ln;
-            return;
+    vll a(n);
+    forn(i,n)cin>>a[i];
+    vector<int>ans(n);
+    ans[0]=1;
+    ll prev=-1;
+    if(a[0]==1)prev=0;
+    for(ll i=1;i<n;i++){
+        ll k=1;
+        ll maxi=a[i]/k;
+        for(ll j=i;j>=0;j--){
+           if((a[j]/k)>=maxi){
+            maxi=a[j]/k;
+            k++;
+           }
         }
+        ans[i]=k;
     }
-    cout<<"NO"<<ln;
+    forn(i,n){
+        cout<<ans[i]<<" ";
+    }
+    cout<<ln;
 }
 
 int main() {
