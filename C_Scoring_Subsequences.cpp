@@ -124,23 +124,27 @@ void solve() {
     cin>>n;
     vll a(n);
     forn(i,n)cin>>a[i];
-    vector<int>ans(n);
-    ans[0]=1;
-    ll prev=-1;
-    if(a[0]==1)prev=0;
-    for(ll i=1;i<n;i++){
-        ll k=1;
-        ll maxi=a[i]/k;
-        for(ll j=i;j>=0;j--){
-           if((a[j]/k)>=maxi){
-            maxi=a[j]/k;
-            k++;
-           }
+    ll j=n-1;
+    vll check(n,0);
+    for(ll i=n-1;i>=0;i--){
+        if(j-i+1<=a[i]){
+            check[j]++;
+        }else{
+            while(j>=0&&j-i+1>a[i]){
+                j--;
+                check[j]=check[j+1]-1;
+            }
+            if(j-i+1<=a[i]){~
+                check[j]++;
+            }
         }
-        ans[i]=k;
+    }
+    while(j>0){
+        j--;
+        check[j]=check[j+1]-1;
     }
     forn(i,n){
-        cout<<ans[i]<<" ";
+        cout<<check[i]<<" ";
     }
     cout<<ln;
 }

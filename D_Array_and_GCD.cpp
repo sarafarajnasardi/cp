@@ -117,26 +117,52 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
-
+vector<ll> firstPrimes(ll n) {
+    vector<ll> res;
+    for (ll x = 2; res.size() < n; ++x)
+        if (isPrime(x)) res.push_back(x);
+    return res;
+}
 
 void solve() {
     ll n;
+    cin >> n;
     vll a(n);
-    forn(i,n)cin>>a[i];
+    forn(i,n) cin >> a[i];
+    
     sort(all(a));
-    bool even=false;
-    if(a[0]%2==0){
-        even=true;
-    }
-    ll j=n-1;
-    for(int i=1;i<n;i++){
-        if(even){
-            if(a[i]==a[i-1]){
-                
+    vll primes = firstPrimes(n);
+    ll i = n-1, j = 0, sum = 0;
+    //multiset<ll> ms;
+    while (i >= 0) {
+        if (a[i] >= primes[j]) {
+            sum += (a[i] - primes[j]);
+            i--;
+            j++;
+        } else {
+            sum+=a[i];
+            if(sum>=primes[j]){
+                sum-=primes[j];
+            }else{
+                break;
             }
+            i--;
+            j++;
         }
     }
 
+    // while (!ms.empty() && j < n) {
+    //     auto it = ms.begin();
+    //     if (primes[j] - (*it) <= sum) {
+    //         sum -= (primes[j] - *it);
+    //         j++;
+    //     } else {
+    //         break;
+    //     }
+    //     ms.erase(it);
+    // }
+
+    cout << n-j << endl;
 }
 
 int main() {
