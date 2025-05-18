@@ -118,36 +118,33 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
 
-
 void solve() {
     ll n;
     cin >> n;
+    vll a(n);
+    vpll ans;
+    ll prev = -1;
 
-    vector<vector<ll>> input(n); 
-     
-    map<ll, ll> mp;
-    for (ll i = 0; i < n; ++i) {
-        ll a;
-        cin >> a;
-        input[i].resize(a);
-        for (ll j = 0; j < a; ++j) {
-            cin >> input[i][j];
-            mp[input[i][j]]++;
+    forn(i, n) {
+        cin >> a[i];
+        if (a[i] > i + 1 && a[i] >= prev) {
+            ans.pb({a[i], i + 1});
+            prev = a[i];
         }
     }
 
-    bool ans = false;
-    for (ll i = 0; i < n; ++i) {
-        bool check = true;
-        for (ll b : input[i]) {
-            if (mp[b]<2) check = false;
-            mp[b]++;
-        }
-        if (check) ans = true;
+    ll cnt = 0;
+    ll x = ans.size();
+    vll only_first;
+    for (auto x : ans) only_first.pb(x.first);
+
+    for (ll i = 0; i < x; i++) {
+        auto it = upper_bound(only_first.begin(), only_first.end(), ans[i].second);
+        ll dist = it - only_first.begin();
+        cnt += (x - dist);
     }
 
-    if (ans) cout << "YES" << ln;
-    else cout << "NO" << ln;
+    cout << cnt << ln;
 }
 
 int main() {

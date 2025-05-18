@@ -139,11 +139,7 @@ void solve() {
     cin >> res;
     if (res == "-1") exit(0);
 
-    if (n % 9 == 0) {
-        cout << "mul " << n / 9 << endl;
-    } else {
-        cout << "add " << n - 9 << endl;
-    }
+    cout << "add " << n - 9 << endl;
     cout.flush();
     cin >> res;
     if (res == "-1") exit(0);
