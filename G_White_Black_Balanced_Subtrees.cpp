@@ -178,49 +178,45 @@ bool isPerfectSquare(ll x)
     return false;
 }
 
-void solve()
-{
-    ll n;
-    cin >> n;
-    vll a(n);
-    vpll ans;
-    forn(i, n)
-    {
-        cin >> a[i];
-        if (a[i] < i + 1)
-        {
-            ans.pb({a[i], i + 1});
-        }
-    }
-    sort(ans.begin(), ans.end());
-    ll m = ans.size();
-    vll ans1(m, 0);
-    map<ll, ll> st;
-    // dbg(m);
-    if (m > 0)
-    {
-        ans1[m - 1] = 0;
-        for (ll i = m - 2; i >= 0; i--)
-        {
+vector<vector<int>> tree;
+string s;
+ll cnt;
 
-            auto it = upper_bound(all(ans), ans[i].second, [](ll val, const pll &p)
-                                      { return val < p.first; });
-            ans1[i] = m - (it - ans.begin());
-            
-        }
+pair<int, int> dfs(int u) {
+    int white = (s[u] == 'W');
+    int black = (s[u] == 'B');
+
+    for (auto v : tree[u]) {
+        auto x = dfs(v);
+        white += x.fi;
+        black += x.se;
     }
 
-    ll sum = accumulate(ans1.begin(), ans1.end(), 0LL);
-    cout << sum << ln;
+    if (white == black) cnt++;
+    return {white, black};
 }
 
-int main()
-{
+void solve() {
+    int n;
+    cin >> n;
+    tree.assign(n, {});
+    for (int i = 1; i < n; i++) {
+        int p;
+        cin >> p;
+        tree[p - 1].push_back(i);
+    }
+
+    cin >> s;
+    cnt = 0;
+    dfs(0); 
+    cout << cnt << ln;
+}
+
+int main() {
     fast_cin();
-    ll t;
+    int t;
     cin >> t;
-    for (int it = 1; it <= t; it++)
-    {
+    while (t--) {
         solve();
     }
     return 0;
