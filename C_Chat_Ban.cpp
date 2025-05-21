@@ -180,60 +180,57 @@ bool isPerfectSquare(ll x)
 
 void solve()
 {
-    ll n;
-    cin >> n;
-    vll a(n);
-    ll mini = LLONG_MAX;
-    forn(i, n)
+    ll n, k;
+    cin >> n >> k;
+    ll strt = 1;
+    ll end = n;
+    ll ans = 2 * n - 1;
+    while (strt <= end)
     {
-        cin >> a[i];
-    }
-
-    forn(ind, n)
-    {
-        ll cnt = 0;
-        ll prev = -1;
-        for(ll j = ind + 1; j<n; j++)
+        ll mid = strt + (end - strt) / 2;
+        ll check = (mid * (mid + 1)) / 2;
+        if (check >= k)
         {
-            if (prev == -1)
+            ans = mid;
+            end = mid - 1;
+        }
+        else
+        {
+            strt = mid + 1;
+        }
+    }
+    ll sum=(n*(n+1))/2;
+    if (ans == 2 * n - 1)
+    {
+        strt = 1;
+        end = n - 1;
+        while (strt <= end)
+        {
+            ll mid = strt + (end - strt) / 2;
+            ll check = sum + (mid * n)- ((mid * (mid + 1)) / 2);
+
+            if (check >= k)
             {
-                cnt++;
-                prev = a[j];
+                ans = mid + n;
+                end = mid - 1;
             }
             else
             {
-                cnt += ((prev / a[j]) + 1);
-                prev = a[j] * ((prev / a[j]) + 1);
+                strt = mid + 1;
             }
         }
-        prev = -1;
-        for (ll i = ind - 1; i >= 0; i--)
-        {
-            if (prev == -1)
-            {
-                cnt++;
-                prev = a[i];
-            }
-            else
-            {
-                cnt += ((prev / a[i]) + 1);
-                prev = a[i] * ((prev / a[i]) + 1);
-            }
-        }
-        mini = min(cnt, mini);
     }
-
-    cout << mini << ln;
+    cout << ans << ln;
 }
 
 int main()
 {
     fast_cin();
-    // ll t;
-    // cin >> t;
-    // for(int it=1;it<=t;it++) {
-    //     solve();
-    // }
-    // return 0;
-    solve();
+    ll t;
+    cin >> t;
+    for (int it = 1; it <= t; it++)
+    {
+        solve();
+    }
+    return 0;
 }
