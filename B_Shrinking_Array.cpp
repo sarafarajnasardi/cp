@@ -117,49 +117,65 @@ bool isPowerOfTwo(int n){if(n==0)return false;return (ceil(log2(n)) == floor(log
 
 bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}return false;}
 
-
-
 void solve() {
     ll n;
-    cin>>n;
+    cin >> n;
     vll a(n);
-    vll b(n);
-    forn(i,n){
-        cin>>a[i];
+    forn(i, n) cin >> a[i];
+
+    forn(i, n - 1) {
+        if (abs(a[i] - a[i + 1]) <= 1) {
+            cout << 0 << ln;
+            return;
+        }
     }
-    forn(i,n){
-        cin>>b[i];
-    }
-    vpll ans;
-    forn(i,n){
-        forn(j,n){
-            if(j<n-1&&a[j]>a[j+1]){
-                swap(a[j],a[j+1]);
-                ans.push_back({1,j+1});
+
+        ll k = 2;
+
+        deque<ll> maxq, minq;
+
+        for (ll j = 0; j < k && j < n; ++j) {
+            while (!maxq.empty() && a[maxq.back()] <= a[j]) maxq.pop_back();
+            while (!minq.empty() && a[minq.back()] >= a[j]) minq.pop_back();
+            maxq.push_back(j);
+            minq.push_back(j);
+        }
+
+        for (ll j = 0; j + k <= n; ++j) {
+            ll maxi = a[maxq.front()];
+            ll mini = a[minq.front()];
+
+            if (j + k < n) {
+                ll next = a[j + k];
+                if (next >= mini - 1 && next <= maxi + 1) {
+                    cout <<  1 << ln;
+                    return;
+                }
+            }
+
+            if (j > 0) {
+                ll prev = a[j - 1];
+                if (prev >= mini - 1 && prev <= maxi + 1) {
+                    cout <<  1 << ln;
+                    return;
+                }
+            }
+
+            if (j + k < n) {
+                if (!maxq.empty() && maxq.front() == j) maxq.pop_front();
+                if (!minq.empty() && minq.front() == j) minq.pop_front();
+
+                while (!maxq.empty() && a[maxq.back()] <= a[j + k]) maxq.pop_back();
+                while (!minq.empty() && a[minq.back()] >= a[j + k]) minq.pop_back();
+
+                maxq.push_back(j + k);
+                minq.push_back(j + k);
             }
         }
-    }
-    forn(i,n){
-        forn(j,n){
-            if(j<n-1&&b[j]>b[j+1]){
-                swap(b[j],b[j+1]);
-                ans.push_back({2,j+1});
-            }
-        }
-    }
-    forn(i,n){
-        if(a[i]>b[i]){
-            ll t=a[i];
-            a[i]=b[i];
-            b[i]=t;
-            ans.push_back({3,i+1});
-        }
-    }
-    cout<<ans.size()<<ln;
-    for(auto x:ans){
-        cout<<x.fi<<" "<<x.se<<endl;
-    }
+
+    cout << -1 << ln;
 }
+
 
 int main() {
     fast_cin();

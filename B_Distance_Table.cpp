@@ -122,51 +122,35 @@ bool isPerfectSquare(ll x){if (x >= 0) {ll sr = sqrt(x);return (sr * sr == x);}r
 void solve() {
     ll n;
     cin>>n;
+    n--;
     vll a(n);
-    vll b(n);
-    forn(i,n){
-        cin>>a[i];
+    forn(i,n)cin>>a[i];
+    vll pref(n,0);
+    pref[0]=a[0];
+    for(ll i=1;i<n;i++){
+        pref[i]=pref[i-1]+a[i];
     }
-    forn(i,n){
-        cin>>b[i];
-    }
-    vpll ans;
-    forn(i,n){
-        forn(j,n){
-            if(j<n-1&&a[j]>a[j+1]){
-                swap(a[j],a[j+1]);
-                ans.push_back({1,j+1});
-            }
+    ll i=0;
+    ll sub=0;
+    while(i<n){
+        for(ll st=i;st<n;st++){
+            pref[st]-=sub;
+            cout<<pref[st]<<" ";
         }
+        cout<<ln;
+        sub=pref[i];
+        i++;
     }
-    forn(i,n){
-        forn(j,n){
-            if(j<n-1&&b[j]>b[j+1]){
-                swap(b[j],b[j+1]);
-                ans.push_back({2,j+1});
-            }
-        }
-    }
-    forn(i,n){
-        if(a[i]>b[i]){
-            ll t=a[i];
-            a[i]=b[i];
-            b[i]=t;
-            ans.push_back({3,i+1});
-        }
-    }
-    cout<<ans.size()<<ln;
-    for(auto x:ans){
-        cout<<x.fi<<" "<<x.se<<endl;
-    }
+
 }
 
 int main() {
     fast_cin();
-    ll t;
-    cin >> t;
-    for(int it=1;it<=t;it++) {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // for(int it=1;it<=t;it++) {
+    //     solve();
+    // }
+    solve();
     return 0;
 }
